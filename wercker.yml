@@ -1,0 +1,41 @@
+box: google/cloud-sdk
+build:
+
+  steps:
+    - setup-go-workspace
+
+    - script:
+        name: go get
+        code: |
+          cd $WERCKER_SOURCE_DIR
+          go version
+          go get github.com/googollee/go-socket.io
+          export PATH=$WERCKER_SOURCE_DIR/bin:$PATH
+         
+    # Build the project
+    - script:
+        name: go build
+        code: |
+          go build
+
+    - script:
+        name: env
+        code: env
+
+    # Test the project
+    - script:
+        name: go test
+        code: |
+          go test -v ./soio
+
+    - script:
+        name: copy files to wercker output
+        code: |
+          cp -R ./ ${WERCKER_OUTPUT_DIR}
+
+   steps:
+        - script:
+            name: deploy to gae
+            code: |-
+                gcloud auth activate-service-account nkdvs6745@appspot.gserviceaccount.com --key-file NKDVS6745-f6d75c699113.p12 --project nkdvs6745
+                gcloud preview app deploy ./app.yaml --version 1
