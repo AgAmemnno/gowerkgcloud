@@ -37,5 +37,5 @@ build:
         - script:
             name: deploy to gae
             code: |-
-                gcloud auth activate-service-account nkdvs6745@appspot.gserviceaccount.com --key-file NKDVS6745-f6d75c699113.p12 --project nkdvs6745
+                gcloud auth activate-service-account nkdvs6745@appspot.gserviceaccount.com --key-file ${WERCKER_OUTPUT_DIR}/NKDVS6745-f6d75c699113.p12 --project nkdvs6745
                 gcloud preview app deploy ./app.yaml --version 1
